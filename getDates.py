@@ -19,8 +19,6 @@ class Course:
         
         self.days = days
 
-
-
     def __repr__(self) -> str:
         return self.name
     
@@ -31,11 +29,14 @@ def getDayName(day):
     dayMap = {"M":"Monday","T":"Tuesday","W":"Wednesday","R":"Thursday","F":"Friday","S":"Saturday","U":"Sunday"}
     return dayMap.get(day.rstrip())
 
+#gets the day of the week from a date
 def getDayFromDate(date):
     return pd.Timestamp(date).day_name()
 
+
+
 def main():
-    csv_titles = ["Subject","Description","Start Time","End Time","Location","Start Date","End Date"]
+    csv_titles = ["Subject","Description","Start Time","End Time","Location","Start Date","End Date"] #csv headers
     if platform == "win32":
         filename = 'uploads\View_My_Courses.xlsx'
     else:
@@ -66,21 +67,23 @@ def main():
         instructor = row[8]
         start_date = row[9].strip().split(" ")[0]
         end_date = row[10].strip().split(" ")[0]
-        classes.append(Course(name, section, instructor, start_date, end_date, start_time, end_time, location, meeting_patterns, days))
+        classes.append(Course(name, section, instructor, start_date, end_date, start_time, end_time, location, meeting_patterns, days)) #create a class object with the attributes read from the workday file
 
     rows_to_write = []
     for c in classes:
-        start_date = datetime.date(int(c.start_date.split("-")[0]),int(c.start_date.split("-")[1]),int(c.start_date.split("-")[2]))
-        date_iter = start_date
-        end_date = datetime.date(int(c.end_date.split("-")[0]),int(c.end_date.split("-")[1]),int(c.end_date.split("-")[2]))
-        delta = datetime.timedelta(days=1)
+        start_date = datetime.date(int(c.start_date.split("-")[0]),int(c.start_date.split("-")[1]),int(c.start_date.split("-")[2]))#gets the start day of each course
+        date_iter = start_date #creates a variable to iterate through dates
+        end_date = datetime.date(int(c.end_date.split("-")[0]),int(c.end_date.split("-")[1]),int(c.end_date.split("-")[2]))#gets the end day of each course
+        delta = datetime.timedelta(days=1)#increments the date by one day
         while date_iter <= end_date:
-            if(getDayFromDate(date_iter) in c.days):
-                row = f'{c},{c.section},{c.start_time},{c.end_time},{c.location}'
+            if(getDayFromDate(date_iter) in c.days):#if the day of the week is in the days of the course ex. M,T,W,R,F
+                row = f'{c},{c.section},{c.start_time},{c.end_time},{c.location}' #get the row to write to the csv
                 print(row)
-                rows_to_write.append([c.name,c.section,c.start_time,c.end_time,c.location,date_iter,date_iter])
+                rows_to_write.append([c.name,c.section,c.start_time,c.end_time,c.location,date_iter,date_iter])#add the row to the list of rows to write
             date_iter += delta
 
+
+    #write the rows to the csv
     if platform == "win32":
         with open('downloads\classes.csv', 'w+') as csvfile:
             writer = csv.writer(csvfile,delimiter=',')

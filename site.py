@@ -40,10 +40,11 @@ def upload_file():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            #downloads the file locally
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            getDates.main()
+            getDates.main() #generate the csv
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return send_file('downloads/classes.csv', as_attachment=True)
+            return send_file('downloads/classes.csv', as_attachment=True)#serves the csv for download
     return '''
     <!doctype html>
     <title>Upload new File</title>
