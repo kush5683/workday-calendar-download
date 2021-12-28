@@ -56,6 +56,8 @@ def upload_file():
     '''
 def main():
     webbrowser.open_new_tab("http://localhost:9090")
+    if 'uploads' not in os.listdir():
+        os.mkdir('uploads')
     app.run(host='0.0.0.0', port=9090,debug=False)
     
 
