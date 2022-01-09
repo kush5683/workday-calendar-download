@@ -53,7 +53,7 @@ def main():
     for index, row in df.iterrows():
         if index < 2:
             continue
-        if int(row[2]):
+        if row[2]:
             class_row.append(list(row[1:]))
     classes = []
     for row in class_row:
