@@ -56,14 +56,24 @@ def main():
         if row[2]:
             class_row.append(list(row[1:]))
     classes = []
+
     for row in class_row:
+        for i in range(len(row)):
+            print(f"row[{i}]: {row[i]}")
         name = row[0]
         section = row[3]
-        meeting_patterns = row[6]
-        location = row[6].split("|")[2]
-        start_time = row[6].split("|")[1].split("-")[0]
-        end_time = row[6].split("|")[1].split("-")[1]
-        days = [getDayName(x) for x in " ".join(row[6].split("|")[0]).strip().split(" - ")]
+        try:
+            meeting_patterns = row[6]
+            location = row[6].split("|")[2]
+            start_time = row[6].split("|")[1].split("-")[0]
+            end_time = row[6].split("|")[1].split("-")[1]
+            days = [getDayName(x) for x in " ".join(row[6].split("|")[0]).strip().split(" - ")]
+        except:
+            meeting_patterns = "TBD"
+            location = "TBD"
+            start_time = "TBD"
+            end_time = "TBD"
+            days = []
         instructor = row[8]
         start_date = row[9].strip().split(" ")[0]
         end_date = row[10].strip().split(" ")[0]
