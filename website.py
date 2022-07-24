@@ -5,7 +5,7 @@ from flask import Flask, flash, redirect, request, send_file, render_template
 from werkzeug.utils import secure_filename
 
 import getDates
-
+from Converter3 import convert
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'xlsx'}
 
@@ -44,7 +44,10 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             getDates.main() #generate the csv
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return send_file('downloads/classes.csv', as_attachment=True)#serves the csv for download
+            with open('downloads/classes.ics', 'wb') as f:
+                f.write(convert('downloads/classes.csv'))
+                f.close()
+            return send_file('downloads/classes.ics', as_attachment=True)#serves the csv for download
     return '''
     <!doctype html>
     <title>Upload new File</title>

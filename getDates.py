@@ -36,7 +36,7 @@ def getDayFromDate(date):
 
 
 def main():
-    csv_titles = ["Subject","Description","Start Time","End Time","Location","Start Date","End Date"] #csv headers
+    csv_titles = ["Subject","Description","Start Time","End Time","Location","Start Date","End Date","All Day Event","Private"] #csv headers
     if platform == "win32":
         filename = 'uploads\View_My_Courses.xlsx'
     else:
@@ -89,7 +89,7 @@ def main():
             if(getDayFromDate(date_iter) in c.days):#if the day of the week is in the days of the course ex. M,T,W,R,F
                 row = f'{c},{c.section},{c.start_time},{c.end_time},{c.location}' #get the row to write to the csv
                 print(row)
-                rows_to_write.append([c.name,c.section,c.start_time,c.end_time,c.location,date_iter,date_iter])#add the row to the list of rows to write
+                rows_to_write.append([c.name,c.section,c.start_time,c.end_time,c.location,date_iter.strftime("%m/%d/20%y"),date_iter.strftime("%m/%d/20%y"),"False","False"])#add the row to the list of rows to write
             date_iter += delta
 
 
