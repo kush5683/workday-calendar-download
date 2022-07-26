@@ -45,7 +45,6 @@ def main(filename):
 
     excel.to_csv(os.path.join(os.path.join(os.getcwd(), 'downloads'), "classes.csv"), index=None, header=True)
     df = pd.DataFrame(pd.read_csv(os.path.join(os.path.join(os.getcwd(), 'downloads'), "classes.csv")))
-    titles = list(df.iloc[1])[1:]
     class_row = []
     for index, row in df.iterrows():
         if row[2]:
