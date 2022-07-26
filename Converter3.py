@@ -1,18 +1,12 @@
-#!/usr/bin/env python
-# See my post on the script here: http://n8henrie.com/
-
-# I got help from here:
-# http://bit.ly/Z4PoR3
-# and here: http://bit.ly/Z4Plov
-# and here: http://bit.ly/Z4PmIU
-# and here http://bit.ly/110xGfV
+"""
+This module is taken from https://github.com/n8henrie/icsConverter
+"""
 
 import csv
 from icalendar import Calendar, Event, LocalTimezone
 from datetime import datetime, timedelta
 from random import randint
 import sys
-from os.path import expanduser, isdir
 import logging
 
 logging.basicConfig(level=logging.WARNING)
@@ -28,9 +22,9 @@ class DateTimeError(Exception):
 
 
 def check_headers(headers):
-    '''Makes sure that all the headers are exactly
+    """Makes sure that all the headers are exactly
     correct so that they'll be recognized as the
-    necessary keys.'''
+    necessary keys."""
 
     valid_keys = ['End Date', 'Description',
                   'All Day Event', 'Start Time', 'Private',
@@ -43,19 +37,14 @@ def check_headers(headers):
                 if header == '':
                     header = '"" (<- an empty column)'
                 logger.error('Invalid header: {}'.format(header))
-                easygui.msgbox(
-                    'Looks like one or more of your headers is not quite right, so the script will exit after this. Make sure there aren\'t any leading or trailing spaces, and check the capitalization, and try again. The headers need to be *exactly* like this (without the quotes):\n\n{0}\n\nLooks like the first problematic header was: "{1}".'.format(
-                        '"' + '" "'.join(valid_keys) + '"', header))
+
                 raise HeadersError('Something isn\'t right with the headers.')
             elif len(headers) < len(valid_keys):
                 logger.error('Missing headers: {}'.format(list(set(valid_keys) - set(headers))))
-                easygui.msgbox('I think you may be missing the following header(s): {}'.format(
-                    list(set(valid_keys) - set(headers))))
                 raise HeadersError('Something isn\'t right with the headers.')
             elif len(headers) > len(valid_keys):
                 duplicate = list(set([i for i in headers if headers.count(i) > 1]))
                 logger.error('Extra headers: {}'.format(duplicate))
-                easygui.msgbox('You might have one or more duplicate headers: {}'.format(duplicate))
                 raise HeadersError('Something isn\'t right with the headers.')
     else:
         return 'headers passed'
@@ -83,11 +72,10 @@ def check_dates_and_times(
 
     logger.debug('Date checker started.')
 
-    # Gots to have a start date, no matter what.
+    # must have a start date, no matter what.
     if start_date in ['', None]:
         logger.error('Missing a start date')
         raise DateTimeError('Missing a start date')
-        return False
 
     for date in [start_date, end_date]:
         if date not in ['', None]:
@@ -119,11 +107,8 @@ def check_dates_and_times(
 
 
 def convert(infile=None):
+    reader = list(csv.DictReader(open(infile, 'U'), skipinitialspace=True))
 
-    reader_builder = list(csv.DictReader(open(infile, 'U'), skipinitialspace=True))
-
-
-    reader = clean_spaces(reader_builder)
 
     cal = Calendar()
     cal.add('prodid', 'https://github.com/kush5683')
@@ -199,5 +184,5 @@ def convert(infile=None):
 
         cal.add_component(event)
         rownum += 1
-    
+
     return cal.to_ical()
